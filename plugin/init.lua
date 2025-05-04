@@ -44,7 +44,7 @@ local function deleter()
 end
 
 -- action when selected input
-local function switcher()
+local function switcher(fzf)
 	return wezterm.action_callback(function(window, pane, _, label)
 		if label == "[+] Create new workspace" then
 			window:perform_action(
@@ -62,7 +62,7 @@ local function switcher()
 					title = "Choose Workspace",
 					description = "Select a workspace to delete",
 					choices = get_workspaces("red"),
-					fuzzy = true,
+					fuzzy = fzf,
 				}),
 				pane
 			)
@@ -78,7 +78,9 @@ local function switcher()
 	end)
 end
 
-function workspace_switcher.switch()
+function workspace_switcher.switch(fzf)
+	fzf = fzf or false
+
 	return wezterm.action_callback(function(window, pane)
 		local choices = get_workspaces()
 
@@ -88,11 +90,11 @@ function workspace_switcher.switch()
 
 		window:perform_action(
 			act.InputSelector({
-				action = switcher(),
+				action = switcher(fzf),
 				title = "Choose Workspace",
 				description = "Select a workspace",
 				choices = choices,
-				fuzzy = true,
+				fuzzy = fzf,
 			}),
 			pane
 		)
