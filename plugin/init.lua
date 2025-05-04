@@ -21,8 +21,8 @@ end
 -- creates new workspace
 local function creator()
 	return wezterm.action_callback(function(window, pane, line)
+		-- do nothing when invalid workspace name
 		if line == "[+] Create new workspace" or line == "[-] Delete workspace" or line == nil then
-			print("invalid workspace name")
 			return
 		end
 		window:perform_action(act.SwitchToWorkspace({ name = line }), pane)
@@ -60,13 +60,13 @@ local function switcher()
 				pane
 			)
 		else
+			-- only switch if label matches workspace that already exists
 			for _, workspace in ipairs(get_workspaces()) do
 				if label == workspace.label then
 					window:perform_action(act.SwitchToWorkspace({ name = label }), pane)
 					return
 				end
 			end
-			error("invalid workspace name")
 		end
 	end)
 end
