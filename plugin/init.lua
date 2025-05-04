@@ -21,8 +21,8 @@ end
 -- creates new workspace
 local function creator()
 	return wezterm.action_callback(function(window, pane, line)
-		if line == "[+] Create new workspace" or line == "[-] Delete workspace" or line == "" then
-			error("invalid workspace name")
+		if line == "[+] Create new workspace" or line == "[-] Delete workspace" or line == nil then
+			print("invalid workspace name")
 			return
 		end
 		window:perform_action(act.SwitchToWorkspace({ name = line }), pane)
