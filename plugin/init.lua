@@ -60,11 +60,13 @@ local function switcher()
 				pane
 			)
 		else
-			if label == "" then
-				error("invalid workspace name")
-				return
+			for _, workspace in ipairs(get_workspaces()) do
+				if label == workspace.label then
+					window:perform_action(act.SwitchToWorkspace({ name = label }), pane)
+					return
+				end
 			end
-			window:perform_action(act.SwitchToWorkspace({ name = label }), pane)
+			error("invalid workspace name")
 		end
 	end)
 end
