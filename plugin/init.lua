@@ -1,9 +1,9 @@
--- config of the workspace switcher
 local wezterm = require("wezterm")
 local act = wezterm.action
 
 local workspace_switcher = {}
 
+-- creates new workspace
 local function creator()
 	return wezterm.action_callback(function(window, pane, line)
 		print(pane)
@@ -11,6 +11,7 @@ local function creator()
 	end)
 end
 
+-- action when selected input
 local function switcher()
 	return wezterm.action_callback(function(window, pane, _, label)
 		if label == "[+] Create new workspace" then
@@ -22,6 +23,8 @@ local function switcher()
 				}),
 				pane
 			)
+		else
+			window:perform_action(act.SwitchToWorkspace({ name = label }), pane)
 		end
 	end)
 end
