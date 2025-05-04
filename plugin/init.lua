@@ -1,3 +1,4 @@
+package.path = package.path .. ";" .. (select(2, ...):gsub("init.lua$", "?.lua"))
 local wezterm = require("wezterm")
 local helper = require("helper")
 local act = wezterm.action
@@ -20,8 +21,8 @@ end
 -- creates new workspace
 local function creator()
 	return wezterm.action_callback(function(window, pane, line)
-		if line == "[+] Create new workspace" or line == "[-] Delete workspace" then
-			print("invalid name")
+		if line == "[+] Create new workspace" or line == "[-] Delete workspace" or line == "" then
+			error("invalid workspace name")
 			return
 		end
 		window:perform_action(act.SwitchToWorkspace({ name = line }), pane)
@@ -59,6 +60,10 @@ local function switcher()
 				pane
 			)
 		else
+			if label == "" then
+				error("invalid workspace name")
+				return
+			end
 			window:perform_action(act.SwitchToWorkspace({ name = label }), pane)
 		end
 	end)
