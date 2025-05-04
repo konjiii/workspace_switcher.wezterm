@@ -6,13 +6,20 @@ local act = wezterm.action
 local workspace_switcher = {}
 
 -- get names of all workspaces
-local function get_workspaces()
+local function get_workspaces(color)
 	local workspaces = wezterm.mux.get_workspace_names()
 	local choices = {}
 
 	-- create choices table
 	for _, name in ipairs(workspaces) do
-		table.insert(choices, { label = name })
+		local colored_name = name
+		if color then
+			colored_name = wezterm.format({
+				{ Foreground = { Color = color } },
+				{ Text = name },
+			})
+		end
+		table.insert(choices, { id = name, label = colored_name })
 	end
 
 	return choices
@@ -31,8 +38,8 @@ end
 
 -- delete a workspace
 local function deleter()
-	return wezterm.action_callback(function(_, _, _, label)
-		helper.kill_workspace(label)
+	return wezterm.action_callback(function(_, _, id, _)
+		helper.kill_workspace(id)
 	end)
 end
 
@@ -54,7 +61,7 @@ local function switcher()
 					action = deleter(),
 					title = "Choose Workspace",
 					description = "Select a workspace to delete",
-					choices = get_workspaces(),
+					choices = get_workspaces("red"),
 					fuzzy = true,
 				}),
 				pane
